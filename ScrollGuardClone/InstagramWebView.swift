@@ -1,8 +1,8 @@
 import SwiftUI
 import WebKit
 
-/// Full-screen web client for instagram.com. Phase 1 will inject the content
-/// filters into this web view; Phase 0 is just a well-behaved shell.
+/// Full-screen web client for instagram.com with the content filters from
+/// `Filtering/` injected before every page load.
 struct InstagramWebView: UIViewRepresentable {
     static let homeURL = URL(string: "https://www.instagram.com/")!
 
@@ -20,6 +20,9 @@ struct InstagramWebView: UIViewRepresentable {
         // Persistent store: log in once, stay logged in across launches.
         configuration.websiteDataStore = .default()
         configuration.allowsInlineMediaPlayback = true
+        configuration.userContentController.addUserScript(
+            ContentFilter.makeUserScript(rules: FilterRule.all)
+        )
 
         let webView = WKWebView(frame: .zero, configuration: configuration)
         webView.customUserAgent = Self.safariUserAgent

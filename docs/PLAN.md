@@ -5,7 +5,7 @@ phase only starts after the previous one has been tested and approved.
 
 Legend: ✅ done · 🔨 in progress · ⏳ not started
 
-## Phase 0 — Runnable shell 🔨
+## Phase 0 — Runnable shell ✅
 
 A minimal app you can install on your iPhone today: Instagram mobile web in a full-screen
 `WKWebView`, no filtering yet.
@@ -21,7 +21,7 @@ Scope:
 Acceptance: build and run on the iPhone, log in to Instagram, scroll the feed, kill and reopen
 the app and still be logged in, and `scrollguard://` typed in Safari opens the app.
 
-## Phase 1 — Content filter engine ⏳
+## Phase 1 — Content filter engine 🔨 (built, awaiting on-device test)
 
 The core product: injected CSS/JS that removes the addictive surfaces.
 
@@ -36,6 +36,11 @@ Scope:
 
 Acceptance: feed shows only followed accounts, no Reels tab, search page shows only the search
 box.
+
+Note: Instagram's markup is obfuscated, so the first on-device test is expected to surface
+selector misses (a suggestion that slips through, or an over-hidden unit). That's normal —
+report what you see and the rules in `ScrollGuardClone/Filtering/FilterRules.swift` get
+tightened; the engine itself doesn't change.
 
 ## Phase 2 — Settings & toggles ⏳
 
