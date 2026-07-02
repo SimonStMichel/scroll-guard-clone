@@ -1,10 +1,34 @@
 import SwiftUI
 import WebKit
 
+/// Lets native UI (the settings sheet) drive the web view without owning it.
+final class WebViewProxy: ObservableObject {
+    weak var webView: WKWebView?
+
+    func goHome() {
+        webView?.load(URLRequest(url: InstagramWebView.homeURL))
+    }
+
+    func reload() {
+        webView?.reload()
+    }
+
+    func goBack() {
+        webView?.goBack()
+    }
+}
+
 /// Full-screen web client for instagram.com with the content filters from
 /// `Filtering/` injected before every page load.
 struct InstagramWebView: UIViewRepresentable {
     static let homeURL = URL(string: "https://www.instagram.com/")!
+
+    /// Rules currently enabled in settings. When the set changes, the filter
+    /// script is reinstalled and the page reloaded (user scripts only apply
+    /// on navigation, so a reload is the honest way to make toggles take
+    /// effect immediately).
+    let enabledRules: [FilterRule]
+    let proxy: WebViewProxy
 
     /// WKWebView's default user agent makes Instagram serve a degraded
     /// "unsupported browser" page, so we present as stock iOS Safari.
@@ -21,8 +45,9 @@ struct InstagramWebView: UIViewRepresentable {
         configuration.websiteDataStore = .default()
         configuration.allowsInlineMediaPlayback = true
         configuration.userContentController.addUserScript(
-            ContentFilter.makeUserScript(rules: FilterRule.all)
+            ContentFilter.makeUserScript(rules: enabledRules)
         )
+        context.coordinator.installedRuleIDs = Set(enabledRules.map(\.id))
 
         let webView = WKWebView(frame: .zero, configuration: configuration)
         webView.customUserAgent = Self.safariUserAgent
@@ -38,14 +63,25 @@ struct InstagramWebView: UIViewRepresentable {
         webView.scrollView.refreshControl = refreshControl
 
         context.coordinator.webView = webView
+        proxy.webView = webView
         webView.load(URLRequest(url: Self.homeURL))
         return webView
     }
 
-    func updateUIView(_ webView: WKWebView, context: Context) {}
+    func updateUIView(_ webView: WKWebView, context: Context) {
+        let ids = Set(enabledRules.map(\.id))
+        guard ids != context.coordinator.installedRuleIDs else { return }
+        context.coordinator.installedRuleIDs = ids
+
+        let controller = webView.configuration.userContentController
+        controller.removeAllUserScripts()
+        controller.addUserScript(ContentFilter.makeUserScript(rules: enabledRules))
+        webView.reload()
+    }
 
     final class Coordinator: NSObject, WKNavigationDelegate {
         weak var webView: WKWebView?
+        var installedRuleIDs: Set<String> = []
 
         /// Hosts the web view may navigate to. Facebook domains are needed for
         /// the "Log in with Facebook" flow; everything else opens in Safari so

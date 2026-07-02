@@ -2,6 +2,30 @@
 
 Running notes on what was built, decisions made, and why. Newest entries first.
 
+## 2026-07-02 — Phase 2: settings & toggles
+
+New: `Filtering/FilterSettings.swift` (persistence), `SettingsView.swift` (UI). Changed:
+`ContentView.swift` (edge handle + sheet), `InstagramWebView.swift` (rule hot-swap +
+`WebViewProxy`).
+
+**Decisions:**
+
+- **Persist the *disabled* rule ids** (`sg.disabledFilterIDs` in `UserDefaults`), not the
+  enabled ones — rules added in future versions default to on without a migration.
+- **Toggles take effect via script reinstall + reload.** `WKUserScript`s only apply on
+  navigation, so when the enabled set changes, `updateUIView` swaps the scripts on the
+  existing `userContentController` and reloads. Keyed on the rule-id set, so unrelated
+  SwiftUI updates never touch the web view.
+- **Edge handle instead of a toolbar.** A native toolbar would either cover Instagram's own
+  top header / bottom tab bar or permanently eat vertical space. Instead: a small translucent
+  shield handle flush with the trailing edge, slightly below center, where it only overlaps
+  scrolling feed content. It opens a sheet with the filter toggles and navigation actions.
+- **Navigation actions in the sheet, not on screen.** Home feed / back / reload live in the
+  settings sheet via a `WebViewProxy` (weak reference set by `makeUIView`) — Instagram web
+  covers day-to-day navigation itself; these are escape hatches, not chrome.
+
+Untested on device (no Mac in this session); Phases 1 and 2 will be accepted together.
+
 ## 2026-07-02 — Phase 1: content filter engine
 
 Two new files under `ScrollGuardClone/Filtering/` (picked up automatically by the

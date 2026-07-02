@@ -23,7 +23,8 @@ struct FilterRule: Identifiable {
 }
 
 extension FilterRule {
-    /// All rules, all enabled. Phase 2 adds per-rule user toggles.
+    /// Master list of rules; the user's enable/disable state lives in
+    /// `FilterSettings`.
     static let all: [FilterRule] = [hideReelsTab, hideFeedSuggestions, hideExploreGrid]
 
     /// The Reels tab in the bottom bar, plus any other link into the Reels

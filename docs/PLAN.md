@@ -42,14 +42,16 @@ selector misses (a suggestion that slips through, or an over-hidden unit). That'
 report what you see and the rules in `ScrollGuardClone/Filtering/FilterRules.swift` get
 tightened; the engine itself doesn't change.
 
-## Phase 2 — Settings & toggles ⏳
+## Phase 2 — Settings & toggles 🔨 (built, awaiting on-device test)
 
 Scope:
 - SwiftUI settings screen with a per-filter toggle (Reels / feed suggestions / Explore grid),
-  persisted in `UserDefaults` and applied on next page load without reinstalling.
-- Small navigation affordances: home button, reload, maybe back/forward.
+  persisted in `UserDefaults` and applied immediately via a page reload.
+- Small navigation affordances: home feed, back, reload — in the settings sheet, opened from
+  a translucent handle on the trailing screen edge.
 
-Acceptance: flipping a toggle changes what the web client shows.
+Acceptance: flipping a toggle changes what the web client shows, and the choice survives an
+app restart. (Phases 1 and 2 can be verified in the same on-device session.)
 
 ## Phase 3 — Shortcuts onboarding & polish ⏳
 
