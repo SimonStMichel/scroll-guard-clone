@@ -29,6 +29,7 @@ ScrollGuardClone.xcodeproj/   Xcode project (open this)
 ScrollGuardClone/             App source (SwiftUI + WebKit)
 docs/PLAN.md                  Phased development plan and current status
 docs/SETUP.md                 How to build and run on your iPhone
+docs/MAC-CHECKLIST.md         What to do next time you're on the Mac
 docs/DEVLOG.md                Running notes on what was built and why
 ```
 
@@ -43,4 +44,6 @@ Full instructions, including first-run trust settings on the phone, are in
 
 ## Status
 
-Phase 0 (runnable Instagram web shell) — see [docs/PLAN.md](docs/PLAN.md) for the full roadmap.
+Phases 0–3 built (web shell, content filters, settings, redirect onboarding); on-device
+acceptance pending — see [docs/PLAN.md](docs/PLAN.md) for the roadmap and
+[docs/MAC-CHECKLIST.md](docs/MAC-CHECKLIST.md) for the test session.

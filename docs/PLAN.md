@@ -53,12 +53,14 @@ Scope:
 Acceptance: flipping a toggle changes what the web client shows, and the choice survives an
 app restart. (Phases 1 and 2 can be verified in the same on-device session.)
 
-## Phase 3 — Shortcuts onboarding & polish ⏳
+## Phase 3 — Shortcuts onboarding & polish 🔨 (built, awaiting on-device test)
 
 Scope:
 - Guided in-app walkthrough for creating the "When Instagram opens → open ScrollGuard Clone"
   automation (Apple doesn't allow creating it programmatically; it's a one-time manual setup).
-- App icon, launch feel, full-bleed layout polish.
+  Shown automatically on first launch, reachable later from the settings sheet.
+- App icon (generated, in the asset catalog), display name "ScrollGuard Clone", and a branded
+  splash cover during the first page load instead of a white flash.
 
 Acceptance: a fresh user can go from install to a working redirect using only in-app
 instructions.

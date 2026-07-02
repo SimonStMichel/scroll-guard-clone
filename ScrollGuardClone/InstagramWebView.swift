@@ -1,9 +1,14 @@
 import SwiftUI
 import WebKit
 
-/// Lets native UI (the settings sheet) drive the web view without owning it.
+/// Lets native UI (the settings sheet) drive the web view without owning it,
+/// and publishes loading state for the launch splash.
 final class WebViewProxy: ObservableObject {
     weak var webView: WKWebView?
+
+    /// True until the first page load settles; ContentView shows the splash
+    /// cover while this is set.
+    @Published var isLoading = true
 
     func goHome() {
         webView?.load(URLRequest(url: InstagramWebView.homeURL))
@@ -36,7 +41,7 @@ struct InstagramWebView: UIViewRepresentable {
         + "AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1"
 
     func makeCoordinator() -> Coordinator {
-        Coordinator()
+        Coordinator(proxy: proxy)
     }
 
     func makeUIView(context: Context) -> WKWebView {
@@ -82,6 +87,18 @@ struct InstagramWebView: UIViewRepresentable {
     final class Coordinator: NSObject, WKNavigationDelegate {
         weak var webView: WKWebView?
         var installedRuleIDs: Set<String> = []
+        private let proxy: WebViewProxy
+
+        init(proxy: WebViewProxy) {
+            self.proxy = proxy
+        }
+
+        private func settleLoad(_ webView: WKWebView) {
+            webView.scrollView.refreshControl?.endRefreshing()
+            if proxy.isLoading {
+                proxy.isLoading = false
+            }
+        }
 
         /// Hosts the web view may navigate to. Facebook domains are needed for
         /// the "Log in with Facebook" flow; everything else opens in Safari so
@@ -104,11 +121,19 @@ struct InstagramWebView: UIViewRepresentable {
         }
 
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-            webView.scrollView.refreshControl?.endRefreshing()
+            settleLoad(webView)
         }
 
         func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-            webView.scrollView.refreshControl?.endRefreshing()
+            settleLoad(webView)
+        }
+
+        func webView(
+            _ webView: WKWebView,
+            didFailProvisionalNavigation navigation: WKNavigation!,
+            withError error: Error
+        ) {
+            settleLoad(webView)
         }
 
         func webView(

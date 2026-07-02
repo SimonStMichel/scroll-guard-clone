@@ -21,6 +21,16 @@ struct SettingsView: View {
                     Text("Changing a filter reloads the page.")
                 }
 
+                Section {
+                    NavigationLink {
+                        OnboardingView()
+                    } label: {
+                        Label("Set up the Instagram redirect", systemImage: "arrow.triangle.turn.up.right.circle")
+                    }
+                } footer: {
+                    Text("The Shortcuts automation that reopens this app whenever native Instagram launches.")
+                }
+
                 Section("Navigation") {
                     Button {
                         proxy.goHome()

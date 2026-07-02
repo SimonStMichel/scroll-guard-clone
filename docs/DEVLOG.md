@@ -2,6 +2,33 @@
 
 Running notes on what was built, decisions made, and why. Newest entries first.
 
+## 2026-07-02 — Phase 3: Shortcuts onboarding & polish
+
+New: `OnboardingView.swift`, `AppIcon.appiconset/Icon-1024.png`. Changed: `ContentView.swift`
+(first-launch sheet + splash), `SettingsView.swift` (redirect section), `InstagramWebView.swift`
+(loading state), `project.pbxproj` (display name).
+
+**Decisions:**
+
+- **Walkthrough, not automation.** Apple provides no API to create personal Shortcuts
+  automations, so `OnboardingView` is a numbered 7-step guide (with an "Open Shortcuts"
+  deep link via `shortcuts://`). The steps target the iOS 17/18 flow and say so where labels
+  drift between versions. The automation action is "Open App → ScrollGuard Clone" — simpler
+  and more robust than the `scrollguard://` URL scheme, which stays registered as a fallback
+  and for testing.
+- **First launch + on demand.** The walkthrough auto-presents until the user taps
+  "It works — I'm done" (`sg.redirectSetupDone` in UserDefaults), and stays reachable from
+  the settings sheet via a NavigationLink (no sheet-over-sheet juggling).
+- **Display name "ScrollGuard Clone"** (`INFOPLIST_KEY_CFBundleDisplayName`) because the
+  walkthrough tells the user to pick that name in the Open App action.
+- **App icon generated in-repo.** No image tooling on the dev machine, so a dependency-free
+  Node script (PNG encoder over built-in zlib) renders the 1024px icon: white shield with a
+  cut-out "blocked feed row" capsule on an indigo→violet gradient. Single 1024px entry is all
+  modern Xcode needs; regenerate by rerunning the script if the design changes.
+- **Splash cover instead of launch flash.** `WebViewProxy` publishes `isLoading` (true until
+  the first navigation settles, including failures); ContentView overlays a gradient +
+  shield cover matching the icon and fades it out. Beats staring at instagram.com booting.
+
 ## 2026-07-02 — Phase 2: settings & toggles
 
 New: `Filtering/FilterSettings.swift` (persistence), `SettingsView.swift` (UI). Changed:

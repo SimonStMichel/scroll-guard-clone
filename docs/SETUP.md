@@ -31,6 +31,12 @@
 - In Safari, type `scrollguard://` in the address bar and go — the app should open. This is
   the hook the Shortcuts automation will use later.
 
+## Setting up the Instagram redirect
+
+On first launch the app walks you through creating the Shortcuts automation ("When Instagram
+opens → open ScrollGuard Clone"). It takes about 30 seconds and can be reopened any time from
+the settings sheet (the shield handle on the right edge of the screen).
+
 ## Note: free Apple ID vs. paid developer account
 
 With a free Apple ID, the app's signature expires after **7 days** — the app stops launching
