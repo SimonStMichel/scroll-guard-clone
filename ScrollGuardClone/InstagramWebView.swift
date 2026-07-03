@@ -141,7 +141,7 @@ struct InstagramWebView: UIViewRepresentable {
             decidePolicyFor navigationAction: WKNavigationAction,
             decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
         ) {
-            guard let url = navigationAction.url, url.scheme?.hasPrefix("http") == true else {
+            guard let url = navigationAction.request.url, url.scheme?.hasPrefix("http") == true else {
                 decisionHandler(.cancel)
                 return
             }

@@ -21,7 +21,7 @@ Scope:
 Acceptance: build and run on the iPhone, log in to Instagram, scroll the feed, kill and reopen
 the app and still be logged in, and `scrollguard://` typed in Safari opens the app.
 
-## Phase 1 — Content filter engine 🔨 (built, awaiting on-device test)
+## Phase 1 — Content filter engine ✅
 
 The core product: injected CSS/JS that removes the addictive surfaces.
 
@@ -42,7 +42,7 @@ selector misses (a suggestion that slips through, or an over-hidden unit). That'
 report what you see and the rules in `ScrollGuardClone/Filtering/FilterRules.swift` get
 tightened; the engine itself doesn't change.
 
-## Phase 2 — Settings & toggles 🔨 (built, awaiting on-device test)
+## Phase 2 — Settings & toggles ✅
 
 Scope:
 - SwiftUI settings screen with a per-filter toggle (Reels / feed suggestions / Explore grid),
@@ -53,7 +53,7 @@ Scope:
 Acceptance: flipping a toggle changes what the web client shows, and the choice survives an
 app restart. (Phases 1 and 2 can be verified in the same on-device session.)
 
-## Phase 3 — Shortcuts onboarding & polish 🔨 (built, awaiting on-device test)
+## Phase 3 — Shortcuts onboarding & polish ✅
 
 Scope:
 - Guided in-app walkthrough for creating the "When Instagram opens → open ScrollGuard Clone"
@@ -65,12 +65,28 @@ Scope:
 Acceptance: a fresh user can go from install to a working redirect using only in-app
 instructions.
 
-## Phase 4 — Screen Time hard-block (optional) ⏳
+## Phase 4 — Screen Time hard-block (optional) 🔨
+
+Phase 3's Shortcuts redirect is convenient but trivial to disable in a moment of temptation
+(just flip the automation off). This phase adds a Screen Time shield on the native Instagram
+app so backing out takes a deliberate act instead of a reflex.
 
 Scope:
-- FamilyControls / ManagedSettings shield on the native Instagram app, with an "open filtered
-  client instead" escape hatch. Works in development on personal devices; public distribution
-  would need Apple's Family Controls entitlement, which doesn't matter for personal use.
+- FamilyControls / ManagedSettings shield on the native Instagram app. Requires two new app
+  extension targets (`ShieldConfigurationExtension`, `ShieldActionExtension`), created via
+  Xcode's GUI rather than hand-edited into the project file.
+- Escape hatch is a manual instruction, not an auto-redirect: the shield's custom text tells
+  the user to open ScrollGuard Clone from the Home Screen themselves. (A `ShieldActionExtension`
+  has no supported API to launch another app from its button — confirmed on Apple's developer
+  forums — so this works with that platform limitation instead of fighting it.)
+- Turning the shield back off requires a dedicated in-app confirmation screen (type-to-confirm
+  phrase + a short mandatory delay), not a single toggle flip — the friction is the point.
+- Works in development on personal devices without Apple's approval; the entitlement's
+  distribution-approval process (multi-week review) is only needed for public/App Store
+  distribution, which is out of scope.
+
+Acceptance: enabling the shield blocks the native Instagram app with ScrollGuard Clone's own
+message; disabling it requires deliberately passing the confirmation screen, not a reflex tap.
 
 ## Phase 5 — Friends & Android ⏳
 

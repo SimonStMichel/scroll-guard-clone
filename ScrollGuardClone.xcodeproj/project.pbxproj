@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXFileReference section */
+		1A0000032E7F0000000000A1 /* ScrollGuardClone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ScrollGuardClone.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
 		1A0000062E7F0000000000A1 /* Exceptions for "ScrollGuardClone" folder in "ScrollGuardClone" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
@@ -15,10 +19,6 @@
 			target = 1A0000042E7F0000000000A1 /* ScrollGuardClone */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
-/* Begin PBXFileReference section */
-		1A0000032E7F0000000000A1 /* ScrollGuardClone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ScrollGuardClone.app; sourceTree = BUILT_PRODUCTS_DIR; };
-/* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		1A0000052E7F0000000000A1 /* ScrollGuardClone */ = {
@@ -264,6 +264,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = KP5P474L62;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ScrollGuardClone/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "ScrollGuard Clone";
@@ -291,6 +292,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = KP5P474L62;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ScrollGuardClone/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "ScrollGuard Clone";

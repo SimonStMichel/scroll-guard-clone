@@ -2,6 +2,21 @@
 
 Running notes on what was built, decisions made, and why. Newest entries first.
 
+## 2026-07-02 — Phases 1–3 accepted on-device
+
+First on-device test session on the Mac (`docs/MAC-CHECKLIST.md`). Filters, toggles, and the
+Shortcuts redirect all work as designed — no rule tightening needed yet. Two fixes were needed
+to get a clean build/run rather than to the filtering behavior itself:
+
+- **Compile fix in `InstagramWebView.swift`.** `WKNavigationAction` has no `.url` property;
+  the URL lives at `navigationAction.request.url`. Signing wasn't the only thing untested on
+  a real toolchain — this only surfaced once Xcode actually compiled the project on the Mac.
+- **Signing.** `DEVELOPMENT_TEAM` set via Xcode's Signing & Capabilities tab (automatic
+  signing, per `docs/SETUP.md`); Xcode also reordered a couple of pbxproj sections as a side
+  effect of opening the project, harmless.
+
+Phases 1, 2, and 3 are now ✅ in `docs/PLAN.md`.
+
 ## 2026-07-02 — Phase 3: Shortcuts onboarding & polish
 
 New: `OnboardingView.swift`, `AppIcon.appiconset/Icon-1024.png`. Changed: `ContentView.swift`
