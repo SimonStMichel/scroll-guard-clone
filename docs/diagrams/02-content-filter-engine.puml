@@ -1,0 +1,44 @@
+@startuml 02-content-filter-engine
+!theme plain
+title In-page filter runtime (injected JS, per page load)
+
+participant "Instagram router\n(history.pushState/\nreplaceState, patched)" as History
+participant "MutationObserver" as Observer
+participant "scan()" as Scan
+participant "DOM" as DOM
+
+== Document start (before first paint) ==
+Scan -> DOM : injectStyle()\nappend <style id="sg-style"> once
+Scan -> DOM : updateRoute()\nhtml[data-sg-path] = location.pathname
+Scan -> DOM : unhideStaleUnits()\nre-check existing [data-sg-hidden] nodes
+Scan -> DOM : hideSuggestedUnits()\nTreeWalker scans text nodes for marker labels
+
+note right of Scan
+  A marker match climbs the DOM to the
+  nearest <article>, or the outermost
+  ancestor with no real post inside
+  (hop-capped, stops at main/body).
+end note
+
+== SPA navigation (no full page load) ==
+DOM -> History : pushState(...) (user taps a tab)
+History -> Scan : onNavigate()
+Scan -> Scan : enforceRoutes()\ndoes pathname start with a blocked prefix?
+alt blocked route (e.g. /reels)
+    Scan -> DOM : location.replace('/')
+else allowed route
+    Scan -> DOM : updateRoute()
+    Scan -> Scan : scheduleScan()\n(200ms debounce)
+end
+
+== Lazy-rendered feed content ==
+DOM -> Observer : childList mutation\n(React renders more posts)
+Observer -> Scan : scheduleScan()
+Scan -> DOM : unhideStaleUnits()
+note right of DOM
+  React can recycle a hidden node for a
+  real post; unhide anything that no
+  longer contains a marker text node.
+end note
+Scan -> DOM : hideSuggestedUnits()
+@enduml

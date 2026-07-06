@@ -1,0 +1,31 @@
+@startuml 04-instagram-redirect
+!theme plain
+title Shortcuts redirect: native Instagram → ScrollGuard Clone
+
+actor User
+participant "OnboardingView" as Onboarding
+participant "iOS Shortcuts\nautomation" as Shortcuts
+participant "Instagram\n(native app)" as NativeIG
+participant "ScrollGuardCloneApp" as App
+participant "ContentView" as CV
+
+== One-time setup ==
+User -> Onboarding : open walkthrough\n(first launch, or from Settings)
+Onboarding -> Shortcuts : openURL("shortcuts://")
+User -> Shortcuts : create automation —\n"When Instagram Is Opened\n→ Run Immediately\n→ Open App: ScrollGuard Clone"
+User -> Onboarding : tap "It works — I'm done"
+Onboarding -> Onboarding : sg.redirectSetupDone = true\n(UserDefaults)
+
+== Every day after ==
+User -> NativeIG : tap the Instagram icon
+NativeIG -> Shortcuts : "Instagram Is Opened"\ntrigger fires
+Shortcuts -> App : Open App action\nforegrounds ScrollGuard Clone
+App -> CV : onAppear\n(redirectSetupDone == true,\nonboarding sheet skipped)
+CV -> User : filtered WKWebView\n(session persisted from before)
+
+note right of NativeIG
+  Instagram flashes briefly, then the
+  automation bounces the user straight
+  into the filtered client instead.
+end note
+@enduml

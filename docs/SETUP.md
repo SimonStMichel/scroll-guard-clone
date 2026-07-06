@@ -1,5 +1,8 @@
 # Building and running on your iPhone
 
+Don't have a Mac/iPhone handy to try it yourself? See the demo in the [README](../README.md) and
+[docs/ARCHITECTURE.md](ARCHITECTURE.md) for how it's built instead.
+
 ## Prerequisites
 
 - A Mac with Xcode 16 or newer (App Store → "Xcode").

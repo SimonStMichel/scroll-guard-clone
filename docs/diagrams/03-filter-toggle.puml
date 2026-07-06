@@ -1,0 +1,36 @@
+@startuml 03-filter-toggle
+!theme plain
+title Toggling a filter in Settings
+
+actor User
+participant "SettingsView" as SettingsView
+participant "FilterSettings" as Settings
+participant "UserDefaults" as Defaults
+participant "ContentView" as CV
+participant "InstagramWebView" as WVRepr
+participant "ContentFilter" as CF
+participant "WKWebView" as WK
+
+User -> SettingsView : toggle "Hide the Reels tab" off
+SettingsView -> Settings : setEnabled(false, for: rule)
+Settings -> Settings : disabledIDs.insert(rule.id)
+Settings -> Defaults : set(disabledIDs,\nforKey: "sg.disabledFilterIDs")
+Settings --> CV : @Published change\nenabledRules recomputed
+CV -> WVRepr : updateUIView(enabledRules)
+WVRepr -> WVRepr : diff new rule-id set\nagainst installedRuleIDs
+
+alt rule set changed
+    WVRepr -> CF : makeUserScript(enabledRules)
+    CF --> WVRepr : new WKUserScript
+    WVRepr -> WK : removeAllUserScripts()\naddUserScript(newScript)
+    WVRepr -> WK : reload()
+    note over WK
+      WKUserScripts only apply on
+      navigation, so a reload is the
+      only way to make a toggle take
+      effect immediately.
+    end note
+else unchanged
+    WVRepr -> WVRepr : no-op\n(unrelated SwiftUI updates\nnever touch the web view)
+end
+@enduml

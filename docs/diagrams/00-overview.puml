@@ -1,0 +1,52 @@
+@startuml 00-overview
+!theme plain
+title ScrollGuard Clone — component overview
+skinparam componentStyle rectangle
+skinparam wrapWidth 200
+
+package "SwiftUI layer" {
+  [ScrollGuardCloneApp] as App
+  [ContentView] as CV
+  [SettingsView] as SV
+  [OnboardingView] as OV
+}
+
+package "Web layer" {
+  [InstagramWebView\n(UIViewRepresentable)] as WV
+  [WebViewProxy] as Proxy
+  [WKWebView] as WK
+}
+
+package "Filtering" {
+  [ContentFilter] as CF
+  [FilterRule / FilterRules] as FR
+  [FilterSettings] as FS
+}
+
+database "UserDefaults" as UD
+cloud "instagram.com" as IG
+
+App --> CV : root view
+CV --> WV : owns
+CV --> SV : sheet
+CV --> OV : sheet (first launch)
+CV --> Proxy : @StateObject
+SV --> FS : reads/writes toggles
+SV --> Proxy : goHome / goBack / reload
+WV --> Proxy : publishes isLoading,\nweak webView ref
+WV --> WK : creates + configures
+WV --> CF : makeUserScript(enabledRules)
+CF --> FR : reads rule definitions
+FS --> FR : enumerates FilterRule.all
+FS --> UD : sg.disabledFilterIDs
+OV --> UD : sg.redirectSetupDone
+WK --> IG : HTTPS, Safari UA,\npersistent cookie store
+
+note bottom of CF
+  Builds one WKUserScript per
+  navigation: CSS rules + the
+  JS scan runtime, rule data
+  crossing into JS as JSON.
+end note
+
+@enduml

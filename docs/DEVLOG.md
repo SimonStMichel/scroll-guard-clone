@@ -2,6 +2,28 @@
 
 Running notes on what was built, decisions made, and why. Newest entries first.
 
+## 2026-07-06 — Documentation pass for portfolio readiness
+
+No app code changed. Added `docs/ARCHITECTURE.md` and `docs/diagrams/*.puml` (one component
+diagram, four sequence diagrams: app launch, the in-page filter runtime, the settings-toggle
+reload flow, and the Shortcuts redirect), and updated the README (stale Status section, a
+disclaimer, a Tech stack list, a demo placeholder, and an inline Mermaid diagram of the redirect
+so GitHub renders something without opening a `.puml` file).
+
+**Decisions:**
+
+- **PlantUML source files, not exported images.** Kept as plain text under `docs/diagrams/` so a
+  future selector fix in `FilterRules.swift` that changes one of these flows is a one-line diff,
+  not a re-exported PNG. `docs/ARCHITECTURE.md` documents how to view them (VS Code's PlantUML
+  extension, IntelliJ, or the online editor) since GitHub doesn't render `.puml` inline.
+- **One Mermaid diagram in the README anyway.** GitHub renders Mermaid fenced code blocks
+  natively, so the single most illustrative flow (the Shortcuts redirect) is duplicated there in
+  Mermaid syntax for anyone just skimming the README, while the full diagram set stays in
+  PlantUML in `docs/` as originally asked for.
+- **Disclaimer in the README.** Since this repo may go on a resume/portfolio and potentially be
+  shared publicly later, added an explicit non-affiliation note (not connected to Instagram,
+  Meta, or the ScrollGuard app) rather than leaving that implicit.
+
 ## 2026-07-02 — Phases 1–3 accepted on-device
 
 First on-device test session on the Mac (`docs/MAC-CHECKLIST.md`). Filters, toggles, and the

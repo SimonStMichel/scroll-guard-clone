@@ -1,0 +1,46 @@
+@startuml 01-app-launch
+!theme plain
+title App launch → first filtered page load
+
+actor User
+participant "ScrollGuardCloneApp" as App
+participant "ContentView" as CV
+participant "FilterSettings" as Settings
+participant "InstagramWebView" as WVRepr
+participant "ContentFilter" as CF
+participant "WKWebView" as WK
+participant "Coordinator\n(WKNavigationDelegate)" as Coord
+participant "instagram.com" as IG
+
+User -> App : launch
+App -> CV : create (WindowGroup root)
+CV -> Settings : FilterSettings()
+Settings -> Settings : read "sg.disabledFilterIDs"\nfrom UserDefaults
+CV -> WVRepr : makeUIView(enabledRules, proxy)
+WVRepr -> CF : makeUserScript(enabledRules)
+CF --> WVRepr : WKUserScript (CSS + JS runtime,\ninjected at document-start)
+WVRepr -> WK : new WKWebView(configuration)
+WVRepr -> WK : addUserScript(script)\ncustomUserAgent = Safari UA\nwebsiteDataStore = .default()
+WVRepr -> Coord : makeCoordinator(proxy)
+WVRepr -> WK : load(homeURL)
+
+note over CV : proxy.isLoading == true\nSplashView covers the screen
+
+WK -> IG : GET https://www.instagram.com/
+IG --> WK : HTML/CSS/JS\n(session restored from\npersisted cookies, if any)
+
+note right of WK
+  Injected script runs before
+  first paint, so blocked
+  surfaces never flash on screen.
+end note
+
+WK -> Coord : webView(_:didFinish:)
+Coord -> Coord : settleLoad()\nproxy.isLoading = false
+Coord --> CV : (via @Published proxy.isLoading)
+CV -> CV : fade out SplashView
+
+alt first launch (sg.redirectSetupDone == false)
+    CV -> User : present OnboardingView sheet
+end
+@enduml
