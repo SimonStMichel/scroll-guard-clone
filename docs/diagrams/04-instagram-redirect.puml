@@ -12,8 +12,8 @@ participant "ContentView" as CV
 == One-time setup ==
 User -> Onboarding : open walkthrough\n(first launch, or from Settings)
 Onboarding -> Shortcuts : openURL("shortcuts://")
-User -> Shortcuts : create automation —\n"When Instagram Is Opened\n→ Run Immediately\n→ Open App: ScrollGuard Clone"
-User -> Onboarding : tap "It works — I'm done"
+User -> Shortcuts : create automation -\n"When Instagram Is Opened\n→ Run Immediately\n→ Open App: ScrollGuard Clone"
+User -> Onboarding : tap "It works - I'm done"
 Onboarding -> Onboarding : sg.redirectSetupDone = true\n(UserDefaults)
 
 == Every day after ==

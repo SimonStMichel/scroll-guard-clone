@@ -1,6 +1,6 @@
 @startuml 00-overview
 !theme plain
-title ScrollGuard Clone — component overview
+title ScrollGuard Clone - component overview
 skinparam componentStyle rectangle
 skinparam wrapWidth 200
 

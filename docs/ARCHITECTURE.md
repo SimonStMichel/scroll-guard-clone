@@ -1,8 +1,7 @@
 # Architecture
 
-This doc is the technical companion to the README's "How it works" — it goes one level deeper
-into how the pieces talk to each other, with diagrams. For *why* each decision was made, see
-[DEVLOG.md](DEVLOG.md); for what's built vs. planned, see [PLAN.md](PLAN.md).
+This doc is the technical companion to the README's "How it works". It goes one level deeper
+into how the pieces talk to each other, with diagrams.
 
 ## Layers
 
@@ -21,11 +20,11 @@ ScrollGuardClone/
 
 Three layers, each with one job:
 
-- **SwiftUI layer** — native chrome: the settings sheet, the onboarding walkthrough, the splash
+- **SwiftUI layer.** Native chrome: the settings sheet, the onboarding walkthrough, the splash
   cover. Never touches Instagram's DOM directly.
-- **Web layer** — a single `WKWebView` wrapped by `InstagramWebView`, configured once (Safari user
+- **Web layer.** A single `WKWebView` wrapped by `InstagramWebView`, configured once (Safari user
   agent, persistent cookie store, navigation policy) and driven afterwards through `WebViewProxy`.
-- **Filtering** — declarative rules (`FilterRules.swift`) compiled into one injected script
+- **Filtering.** Declarative rules (`FilterRules.swift`) compiled into one injected script
   (`ContentFilter.swift`) per navigation. This is the only layer that knows anything about
   Instagram's markup, which is the point: when Instagram's selectors drift, `FilterRules.swift`
   is the one file that needs edits.
@@ -35,7 +34,7 @@ one of the viewers in [Viewing the diagrams](#viewing-the-diagrams) below).
 
 ## Sequence diagrams
 
-The four flows below are the ones worth understanding end-to-end — everything else in the app is
+The four flows below are the ones worth understanding end-to-end. Everything else in the app is
 plumbing around them.
 
 ### 1. App launch → first filtered page load
@@ -49,7 +48,7 @@ at `document-start` on the JS side.
 ### 2. In-page filter runtime
 
 The interesting part. Instagram is a client-rendered SPA, so a one-shot DOM scan on page load
-isn't enough — content keeps arriving as the user scrolls, and routes change without a real
+isn't enough. Content keeps arriving as the user scrolls, and routes change without a real
 navigation. The injected runtime handles three cases: the initial scan, SPA route changes
 (patched `history.pushState`/`replaceState` + `popstate`), and lazily-rendered feed content (a
 `MutationObserver`). All three funnel into the same `scan()`.
@@ -59,7 +58,7 @@ navigation. The injected runtime handles three cases: the initial scan, SPA rout
 ### 3. Toggling a filter in Settings
 
 `WKUserScript`s only take effect on navigation, so flipping a toggle has to reinstall the script
-and reload the page — there's no way to hot-patch a running page's injected script. The diff
+and reload the page. There's no way to hot-patch a running page's injected script. The diff
 against `installedRuleIDs` exists so unrelated SwiftUI state changes don't trigger a needless
 reload.
 
@@ -68,9 +67,9 @@ reload.
 ### 4. The Shortcuts redirect
 
 The mechanism that makes the whole app usable day-to-day. iOS sandboxing means nothing can
-reach into the native Instagram app, so instead a personal Shortcuts automation (created once,
-manually — Apple has no API for it) watches for Instagram launching and immediately foregrounds
-ScrollGuard Clone instead.
+reach into the native Instagram app, so instead a personal Shortcuts automation (created once by
+hand, since Apple has no API for it) watches for Instagram launching and immediately
+foregrounds ScrollGuard Clone.
 
 *(Source: [diagrams/04-instagram-redirect.puml](diagrams/04-instagram-redirect.puml))*
 
@@ -78,10 +77,10 @@ ScrollGuard Clone instead.
 
 The `.puml` sources under [diagrams/](diagrams/) render with:
 
-- **VS Code** — the "PlantUML" extension (jebbs.plantuml) renders sequence/component diagrams
+- **VS Code.** The "PlantUML" extension (jebbs.plantuml) renders sequence/component diagrams
   locally with no extra install for the preview.
-- **IntelliJ / AppCode** — the bundled or "PlantUML integration" plugin.
-- **Anything else** — paste the file contents into the official online editor at
+- **IntelliJ / AppCode.** The bundled or "PlantUML integration" plugin.
+- **Anything else.** Paste the file contents into the official online editor at
   [plantuml.com/plantuml](https://plantuml.com/plantuml).
 
 They're kept as plain text specifically so a future selector change (see `FilterRules.swift`)

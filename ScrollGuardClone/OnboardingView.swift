@@ -46,14 +46,14 @@ struct OnboardingView: View {
         ),
         Step(
             title: "Tap Done, then try it",
-            detail: "Open Instagram — it should bounce you straight back into ScrollGuard Clone."
+            detail: "Open Instagram - it should bounce you straight back into ScrollGuard Clone."
         ),
     ]
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
-                Text("The app can't modify Instagram itself — instead, a Shortcuts automation reopens ScrollGuard Clone whenever Instagram launches. You keep Instagram installed, so notifications and DMs still work.")
+                Text("The app can't modify Instagram itself - instead, a Shortcuts automation reopens ScrollGuard Clone whenever Instagram launches. You keep Instagram installed, so notifications and DMs still work.")
                     .font(.callout)
                     .foregroundStyle(.secondary)
 
@@ -91,7 +91,7 @@ struct OnboardingView: View {
                         redirectSetupDone = true
                         dismiss()
                     } label: {
-                        Text("It works — I'm done")
+                        Text("It works - I'm done")
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.bordered)

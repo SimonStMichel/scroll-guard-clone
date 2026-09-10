@@ -2,7 +2,7 @@ import WebKit
 
 /// Builds the `WKUserScript` that applies the filter rules inside the web
 /// view. The script is injected at document start so structural CSS is in
-/// place before first paint — blocked content never flashes on screen.
+/// place before first paint - blocked content never flashes on screen.
 enum ContentFilter {
     static func makeUserScript(rules: [FilterRule]) -> WKUserScript {
         let cssRules = rules.map(\.css).filter { !$0.isEmpty }

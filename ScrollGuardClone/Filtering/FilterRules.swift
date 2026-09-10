@@ -11,7 +11,7 @@ import Foundation
 ///
 /// - `css` hides elements structurally and is applied before first paint.
 /// - `markers` are *exact* text labels (after trimming) that identify feed
-///   units the JS scanner should hide — needed because CSS can't match text.
+///   units the JS scanner should hide - needed because CSS can't match text.
 /// - `blockedRoutePrefixes` bounce the SPA back to the home feed if a route
 ///   slips through (e.g. a deep link straight into the Reels feed).
 struct FilterRule: Identifiable {
@@ -29,7 +29,7 @@ extension FilterRule {
 
     /// The Reels tab in the bottom bar, plus any other link into the Reels
     /// feed. Matches `/reels...` (the endless feed) but deliberately NOT
-    /// `/reel/<id>` (a single reel a friend shared — that's normal social
+    /// `/reel/<id>` (a single reel a friend shared - that's normal social
     /// use, not doomscrolling). The route block covers direct navigation.
     static let hideReelsTab = FilterRule(
         id: "reels-tab",
@@ -42,7 +42,7 @@ extension FilterRule {
 
     /// Suggested and sponsored units in the home feed. No stable structure
     /// to target, so the JS scanner looks for these exact header labels and
-    /// hides the enclosing unit. Labels are locale-specific — English and
+    /// hides the enclosing unit. Labels are locale-specific - English and
     /// French are covered; add your locale's labels here if the feed shows
     /// suggestions in another language.
     static let hideFeedSuggestions = FilterRule(
@@ -66,7 +66,7 @@ extension FilterRule {
 
     /// The algorithmic grid on the search/Explore page. Rather than guessing
     /// at obfuscated containers, hide every post/reel link inside `main`
-    /// while on an `/explore` route — that removes the grid tiles but leaves
+    /// while on an `/explore` route - that removes the grid tiles but leaves
     /// the search box and its results (accounts, hashtags, places) intact,
     /// since those link to profiles/tags, not `/p/` or `/reel`.
     static let hideExploreGrid = FilterRule(
